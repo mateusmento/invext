@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  invext-postgres:
+    image: postgres:14
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - invext-postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=invext
+      - POSTGRES_USER=invext
+      - POSTGRES_PASSWORD=invext
+
+volumes:
+  invext-postgres:
+    name: invext-postgres
