@@ -1,0 +1,11 @@
+GET http://localhost:3000/service-requests
+
+###
+
+POST http://localhost:3000/service-requests
+Content-Type: application/json
+
+{
+    "clientName": "Mateus",
+    "serviceType": "LOAN_CONTRACTING"
+}

@@ -6,4 +6,4 @@ import org.springframework.stereotype.Repository;
 import com.invext.domain.entities.ServiceRequest;
 
 @Repository
-public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, Integer> {}
+public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, Long> {}

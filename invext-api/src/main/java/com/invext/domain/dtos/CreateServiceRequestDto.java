@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter @Setter
 public class CreateServiceRequestDto {
     private String clientName;
-    private ServiceType type;
+    private ServiceType serviceType;
 }
