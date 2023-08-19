@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.invext.application.dtos.CreateServiceRequestDto;
 import com.invext.application.dtos.ServiceRequestDto;
 import com.invext.application.mapper.ServiceRequestMapper;
+import com.invext.domain.dtos.CreateServiceRequestDto;
 import com.invext.domain.entities.ServiceRequest;
 import com.invext.domain.services.ServiceRequestService;
 
