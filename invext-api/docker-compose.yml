@@ -13,6 +13,20 @@ services:
       - POSTGRES_USER=invext
       - POSTGRES_PASSWORD=invext
 
+  invext-pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - 3300:3300
+    volumes:
+      - invext-pgadmin:/var/lib/pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=fake@email.com
+      - PGADMIN_DEFAULT_PASSWORD=123
+      - PGADMIN_LISTEN_PORT=3300
+
 volumes:
   invext-postgres:
     name: invext-postgres
+  invext-pgadmin:
+    name: invext-pgadmin
