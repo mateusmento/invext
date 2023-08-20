@@ -24,17 +24,17 @@ function Client() {
     const { data: serviceRequest } = await serviceRequestService.createServiceRequest({ serviceType, clientName });
 
     if (serviceRequest.attendant) {
-      beServed(serviceRequest);
+      listenAttendant(serviceRequest);
     } else {
-      setStep('await-service');
+      setStep('await-attendant');
       stomp.current.subscribe(`/clients/${serviceRequest.clientCode}/accepted`, (serviceRequest) => {
-        beServed(JSON.parse(serviceRequest.body));
+        listenAttendant(JSON.parse(serviceRequest.body));
       });
     }
   }
 
-  async function beServed(serviceRequest) {
-    setStep('service');
+  async function listenAttendant(serviceRequest) {
+    setStep('listen-attendant');
     setServiceRequest(serviceRequest);
     stomp.current.subscribe(`/clients/${serviceRequest.clientCode}/finished`, () => {
       setServiceRequest(null);
@@ -52,10 +52,10 @@ function Client() {
             onChange={(e) => setClientName(e.target.value)}
             placeholder="Qual é o seu nome?"
           />
-          <button onClick={() => setStep('serviceType')}>Próximo</button>
+          <button onClick={() => setStep('service-type-selection')}>Próximo</button>
         </>
       )}
-      { step === 'serviceType' && (
+      { step === 'service-type-selection' && (
         <>
           <h2>Que tipo de assunto você deseja falar?</h2>
           <div className="service-types">
@@ -66,12 +66,12 @@ function Client() {
           <button onClick={() => setStep('identification')}>Voltar</button>
         </>
       )}
-      { step === 'service' && (
+      { step === 'listen-attendant' && (
         <>
           <h2>Você está falando com {serviceRequest.attendant.name}</h2>
         </>
       )}
-      { step === 'await-service' && (
+      { step === 'await-attendant' && (
         <>
           <h2>No momento, nossos atendentes estão todos ocupados.</h2>
           <div>Aguarde até um atendente ficar disponível, por favor.</div>

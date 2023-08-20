@@ -54,10 +54,10 @@ export function Attendant() {
         setShowAttendants(false);
     }
 
-    async function serve() {
+    async function answerClient() {
       const { data } = await attendantService.findServiceRequest(selectedAttendantId);
       setServiceRequests(data);
-      setStep('serve');
+      setStep('answer-client');
       stomp.current.subscribe(`/attendants/${selectedAttendantId}`, (serviceRequest) => {
         setServiceRequests((serviceRequests) => [...serviceRequests, JSON.parse(serviceRequest.body)]);
       });
@@ -87,7 +87,7 @@ export function Attendant() {
                     </ul>
                 )}
             </div>
-            {selectedAttendantId && <button onClick={() => serve()}>Atender</button>}
+            {selectedAttendantId && <button onClick={() => answerClient()}>Atender</button>}
         </>)}
         { step === 'create-attendant' && (<>
             <b>Criar atendante {attendantName}</b>
@@ -98,7 +98,7 @@ export function Attendant() {
             </div>
             <button onClick={() => setStep('identification')}>Voltar</button>
         </>)}
-        { step === 'serve' && (<>
+        { step === 'answer-client' && (<>
             <b>Solicitações</b>
             <ul className="service-requests">
                 {serviceRequests.map(serviceRequest => (
