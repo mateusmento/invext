@@ -1,0 +1,60 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+button {
+  border: none;
+  font-size: 14px;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: transparent;
+  transition: 200ms;
+}
+
+button:hover {
+  background-color: #fff;
+  color: rgb(53, 53, 188);
+}
+
+main {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 80px;
+
+  margin-top: 80px;
+}
+
+input {
+  max-width: 300px;
+  padding: 10px;
+  background-color: transparent;
+  border-bottom: 3px solid #ccc;
+  font-size: 24px;
+  outline: none;
+  text-align: center;
+  transition: max-width 500ms;
+}
+
+input:focus {
+  max-width: 600px;
+}
+
+.service-types {
+  display: flex;
+  gap: 20px;
+}
