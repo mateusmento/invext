@@ -1,6 +1,5 @@
 package com.invext.domain.services;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,10 +23,6 @@ public class ServiceRequestService {
 
     @Autowired
     private ServiceRequestFactory serviceRequestFactory;
-
-    public List<ServiceRequest> findAll(Long attendantId) {
-        return serviceRequestRepository.findAttendantServiceRequests(attendantId);
-    }
 
     public ServiceRequest createServiceRequest(CreateServiceRequestDto dto) {
         var serviceRequest = attendantRepository.findAvailableAttendant(dto.getServiceType())

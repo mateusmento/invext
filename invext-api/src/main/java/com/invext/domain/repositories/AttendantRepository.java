@@ -14,7 +14,7 @@ import com.invext.domain.values.ServiceType;
 public interface AttendantRepository extends JpaRepository<Attendant, Long> {
     @Query("""
         from Attendant att
-        where att.group.serviceType = :serviceType
+        where att.serviceType = :serviceType
         and not att in (
             select r.attendant
             from ServiceRequest r

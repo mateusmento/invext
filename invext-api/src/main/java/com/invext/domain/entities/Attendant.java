@@ -1,13 +1,13 @@
 package com.invext.domain.entities;
 
-import java.util.List;
+import com.invext.domain.values.ServiceType;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,9 +21,6 @@ public class Attendant {
     private Long id;
     private String name;
 
-    @ManyToOne
-    private AttendantGroup group;
-
-    @OneToMany(mappedBy = "attendant")
-    private List<ServiceRequest> serviceRequests;
+    @Enumerated(EnumType.ORDINAL)
+    private ServiceType serviceType;
 }
