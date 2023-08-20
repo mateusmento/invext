@@ -4,20 +4,19 @@ Essa solução inclui uma api em Java e Spring Boot e uma aplicação web em Rea
 
 Antes de executar a solução, certifique-se de ter os seguintes dependencias:
 
-- Docker
-- Node.js
-- Java 17
+- Docker (23.0.1)
+- Node.js (v18.12.1)
 
 Para executar a api:
 ```bash
 cd invext-api
-docker compose up -d
-mvn spring-boot:run
+docker compose up
 ```
 
 Para executar a web app:
 ```bash
 cd invext-app
+nvm use
 npm install
 npm start
 ```
