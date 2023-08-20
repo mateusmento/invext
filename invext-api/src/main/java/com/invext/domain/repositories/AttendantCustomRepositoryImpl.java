@@ -3,8 +3,10 @@ package com.invext.domain.repositories;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.invext.domain.entities.Attendant;
+import com.invext.domain.values.ServiceRequestStatus;
 import com.invext.domain.values.ServiceType;
 
 import jakarta.persistence.EntityManager;
@@ -16,24 +18,30 @@ interface AttendantCustomRepository {
 
 public class AttendantCustomRepositoryImpl implements AttendantCustomRepository {
 
+    @Value("${MAX_ATTENDANT_SERVICE_REQUESTS}")
+    private int MAX_ATTENDANT_SERVICE_REQUESTS;
+
     @Autowired
     private EntityManager em;
 
     public Optional<Attendant> findAvailableAttendant(ServiceType serviceType) {
         try {
-            var result = em.createQuery("""
-                from Attendant att
-                where att.serviceType = :serviceType
-                and not att in (
-                    select r.attendant
-                    from ServiceRequest r
-                    where r.serviceType = :serviceType
-                    and r.status = com.invext.domain.values.ServiceRequestStatus.ACCEPTED
-                    group by r.attendant
-                    having count(r.id) >= 3
-                )
+            var result = (Attendant) em.createNativeQuery("""
+                select a.*
+                from attendant a
+                left join (
+                    select attendant_id, count(id) service_requests
+                    from service_request
+                    where service_type = :serviceType and status = :acceptedStatus
+                    group by attendant_id
+                ) sr on a.id = sr.attendant_id
+                where a.service_type = :serviceType and coalesce(sr.service_requests, 0) < :MAX_ATTENDANT_SERVICE_REQUESTS
+                order by coalesce(sr.service_requests, 0)
+                limit 1
             """, Attendant.class)
-            .setParameter("serviceType", serviceType)
+            .setParameter("serviceType", serviceType.ordinal())
+            .setParameter("acceptedStatus", ServiceRequestStatus.ACCEPTED.ordinal())
+            .setParameter("MAX_ATTENDANT_SERVICE_REQUESTS", MAX_ATTENDANT_SERVICE_REQUESTS)
             .getSingleResult();
 
             return Optional.of(result);
