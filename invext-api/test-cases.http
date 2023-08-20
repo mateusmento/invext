@@ -1,0 +1,25 @@
+POST http://localhost:3000/attendants
+Content-Type: application/json
+
+{
+    "name": "Mateus",
+    "serviceType": "LOAN_CONTRACTING"
+}
+
+###
+
+POST http://localhost:3000/service-requests
+Content-Type: application/json
+
+{
+    "clientName": "Igor",
+    "serviceType": "LOAN_CONTRACTING"
+}
+
+###
+
+GET http://localhost:3000/attendants/1/service-requests
+
+###
+
+PUT http://localhost:3000/service-requests/3/finished
