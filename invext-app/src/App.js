@@ -30,7 +30,7 @@ function App() {
       <main>
         { step === 'clientName' && (
           <>
-            <h2>Fala com um de nossos atendentes</h2>
+            <h2>Fale com um de nossos atendentes</h2>
             <input
               value={clientName}
               onChange={(e) => setClientName(e.target.value)}
