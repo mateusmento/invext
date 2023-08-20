@@ -1,5 +1,7 @@
 package com.invext.domain.services;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 
 import com.invext.domain.dtos.CreateServiceRequestDto;
@@ -15,6 +17,7 @@ public class ServiceRequestFactoryImpl implements ServiceRequestFactory {
             .clientName(dto.getClientName())
             .serviceType(dto.getServiceType())
             .status(ServiceRequestStatus.PENDING)
+            .createdAt(LocalDateTime.now())
             .build();
     }
 
@@ -24,6 +27,7 @@ public class ServiceRequestFactoryImpl implements ServiceRequestFactory {
             .serviceType(dto.getServiceType())
             .attendant(attendant)
             .status(ServiceRequestStatus.ACCEPTED)
+            .createdAt(LocalDateTime.now())
             .build();
     }
 }

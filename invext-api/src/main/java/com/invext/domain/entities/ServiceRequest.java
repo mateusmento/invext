@@ -40,6 +40,5 @@ public class ServiceRequest {
     @ManyToOne
     private Attendant attendant;
 
-    @CreatedDate
     private LocalDateTime createdAt;
 }
