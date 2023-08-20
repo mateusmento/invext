@@ -1,6 +1,7 @@
 import axios from "axios";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import debounce from 'debounce-promise';
+import * as Stomp from "@stomp/stompjs";
 
 const findAttendant = debounce((name) => {
     return axios.get(`http://localhost:8080/attendants`, { params: { name } });
@@ -25,12 +26,22 @@ export function Attendant() {
     const [step, setStep] = useState('identification');
     const [serviceRequests, setServiceRequests] = useState();
     const [showAttendants, setShowAttendants] = useState(false);
+    const stomp = useRef();
 
-    async function create(serviceType) {
+    useEffect(() => {
+        stomp.current = new Stomp.Client({
+          brokerURL: 'ws://localhost:8080/websocket',
+        });
+
+        stomp.current.activate();
+        return () => stomp.current.deactivate();
+    }, []);
+    
+    const create = useCallback(async (serviceType) => {
         const { data: attendant } = await createAttendant(attendantName, serviceType);
         setSelectedAttendantId(attendant.id);
         setStep('identification');
-    }
+    }, [attendantName]);
 
     async function updateAttendantName(name) {
         setAttendantName(name);
@@ -50,16 +61,20 @@ export function Attendant() {
         setShowAttendants(false);
     }
 
-    async function serve() {
+    const serve = useCallback(async () => {
       const { data } = await findServiceRequest(selectedAttendantId);
       setServiceRequests(data);
       setStep('serve');
-    }
+      stomp.current.subscribe(`/attendants/${selectedAttendantId}`, (serviceRequest) => {
+        setServiceRequests((serviceRequests) => [...serviceRequests, JSON.parse(serviceRequest.body)]);
+      });
+    }, [selectedAttendantId]);
 
     async function finish(serviceRequest) {
         await finishServiceRequest(serviceRequest.id);
         const { data } = await findServiceRequest(selectedAttendantId);
         setServiceRequests(data);
+        console.log(data);
     }
 
     return (<>

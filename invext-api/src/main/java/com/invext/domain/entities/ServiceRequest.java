@@ -1,6 +1,7 @@
 package com.invext.domain.entities;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import com.invext.domain.values.ServiceRequestStatus;
 import com.invext.domain.values.ServiceType;
@@ -28,6 +29,7 @@ public class ServiceRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String clientName;
+    private UUID clientCode;
 
     @Enumerated(EnumType.ORDINAL)
     private ServiceType serviceType;

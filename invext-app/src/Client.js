@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import axios from 'axios';
+import * as Stomp from '@stomp/stompjs';
 
 function createServiceRequest(serviceRequestData) {
   return axios.post('http://localhost:8080/service-requests', serviceRequestData);
@@ -8,22 +9,44 @@ function createServiceRequest(serviceRequestData) {
 
 function Client() {
   const [clientName, setClientName] = useState('');
-  const [step, setStep] = useState('clientName');
+  const [step, setStep] = useState('identification');
   const [serviceRequest, setServiceRequest] = useState();
+  const stomp = useRef();
+
+  useEffect(() => {
+    stomp.current = new Stomp.Client({
+      brokerURL: 'ws://localhost:8080/websocket',
+    });
+
+    stomp.current.activate();
+    return () => stomp.current.deactivate();
+  }, []);
 
   async function requestService(serviceType) {
     const { data: serviceRequest } = await createServiceRequest({ serviceType, clientName });
+
     if (serviceRequest.attendant) {
-      setStep('service');
+      beServed(serviceRequest);
     } else {
       setStep('await-service');
+      stomp.current.subscribe(`/clients/${serviceRequest.clientCode}/accepted`, (serviceRequest) => {
+        beServed(JSON.parse(serviceRequest.body));
+      });
     }
+  }
+
+  async function beServed(serviceRequest) {
+    setStep('service');
     setServiceRequest(serviceRequest);
+    stomp.current.subscribe(`/clients/${serviceRequest.clientCode}/finished`, () => {
+      setServiceRequest(null);
+      setStep('identification');
+    });
   }
 
   return (
     <>
-      { step === 'clientName' && (
+      { step === 'identification' && (
         <>
           <h2>Fale com um de nossos atendentes</h2>
           <input
@@ -42,7 +65,7 @@ function Client() {
             <button onClick={() => requestService('LOAN_CONTRACTING')}>Contratação de emprestimo</button>
             <button onClick={() => requestService('OTHERS')}>Outros Assuntos</button>
           </div>
-          <button onClick={() => setStep('clientName')}>Voltar</button>
+          <button onClick={() => setStep('identification')}>Voltar</button>
         </>
       )}
       { step === 'service' && (

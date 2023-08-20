@@ -12,6 +12,7 @@ public class ServiceRequestMapper {
         return ServiceRequestDto.builder()
             .id(serviceRequest.getId())
             .clientName(serviceRequest.getClientName())
+            .clientCode(serviceRequest.getClientCode())
             .serviceType(serviceRequest.getServiceType())
             .attendant(serviceRequest.getAttendant())
             .build();
