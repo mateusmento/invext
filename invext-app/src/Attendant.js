@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import debounce from 'debounce-promise';
 import * as Stomp from "@stomp/stompjs";
 
@@ -37,11 +37,11 @@ export function Attendant() {
         return () => stomp.current.deactivate();
     }, []);
     
-    const create = useCallback(async (serviceType) => {
+    async function create(serviceType) {
         const { data: attendant } = await createAttendant(attendantName, serviceType);
         setSelectedAttendantId(attendant.id);
         setStep('identification');
-    }, [attendantName]);
+    };
 
     async function updateAttendantName(name) {
         setAttendantName(name);
@@ -61,20 +61,19 @@ export function Attendant() {
         setShowAttendants(false);
     }
 
-    const serve = useCallback(async () => {
+    async function serve() {
       const { data } = await findServiceRequest(selectedAttendantId);
       setServiceRequests(data);
       setStep('serve');
       stomp.current.subscribe(`/attendants/${selectedAttendantId}`, (serviceRequest) => {
         setServiceRequests((serviceRequests) => [...serviceRequests, JSON.parse(serviceRequest.body)]);
       });
-    }, [selectedAttendantId]);
+    }
 
     async function finish(serviceRequest) {
         await finishServiceRequest(serviceRequest.id);
         const { data } = await findServiceRequest(selectedAttendantId);
         setServiceRequests(data);
-        console.log(data);
     }
 
     return (<>
