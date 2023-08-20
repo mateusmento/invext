@@ -1,3 +1,7 @@
+GET http://localhost:8080/attendants?name=
+
+###
+
 POST http://localhost:8080/attendants
 Content-Type: application/json
 
