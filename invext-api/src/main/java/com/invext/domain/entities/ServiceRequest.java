@@ -2,8 +2,6 @@ package com.invext.domain.entities;
 
 import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.CreatedDate;
-
 import com.invext.domain.values.ServiceRequestStatus;
 import com.invext.domain.values.ServiceType;
 
