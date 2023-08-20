@@ -11,7 +11,7 @@ header {
   padding: 20px;
 }
 
-button {
+.button, button {
   border: none;
   font-size: 14px;
   color: #fff;
@@ -23,7 +23,7 @@ button {
   transition: 200ms;
 }
 
-button:hover {
+.button:hover, button:hover {
   background-color: #fff;
   color: rgb(53, 53, 188);
 }
@@ -40,7 +40,7 @@ main {
 }
 
 input {
-  max-width: 300px;
+  max-width: 350px;
   padding: 10px;
   background-color: transparent;
   border-bottom: 3px solid #ccc;
@@ -57,4 +57,36 @@ input:focus {
 .service-types {
   display: flex;
   gap: 20px;
+}
+
+.attendants {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.attendant {
+  cursor: pointer;
+}
+
+.attendant-combo-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.service-requests {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  min-width: 240px;
+}
+
+.service-request {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
 }

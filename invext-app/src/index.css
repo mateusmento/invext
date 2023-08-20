@@ -1,24 +1,36 @@
 *, *::after, *::before, *::placeholder, input, textarea {
+  font-family: inherit;
+  color: inherit;
+
   margin: 0;
   line-height: 100%;
   padding: 0;
-  font-family: 'DM Sans';
+}
+
+::selection {
+  background-color: yellow;
+  color: rgb(53, 53, 188);
 }
 
 body {
-  margin: 0;
   background-color: rgb(53, 53, 188);
+  color: #fff;
+  font-family: 'DM Sans';
  
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-body, input  {
-  color: white;
-}
-
 ::placeholder {
   color: #aaa;
+}
+
+a {
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
 }
 
 code {
