@@ -4,6 +4,7 @@ import * as Stomp from "@stomp/stompjs";
 import axios from "../axios";
 import { AttendantService } from "../services/AttendantService";
 import { ServiceRequestService } from "../services/ServiceRequestService";
+import { ServiceType } from "../constants/ServiceType";
 
 const findAttendant = debounce((name) => {
     return axios.get(`/attendants`, { params: { name } });
@@ -92,9 +93,9 @@ export function Attendant() {
         { step === 'create-attendant' && (<>
             <b>Criar atendante {attendantName}</b>
             <div className="service-types">
-                <button onClick={() => createServiceRequest('CARD_PROBLEMS')}>Problema de Cartões</button>
-                <button onClick={() => createServiceRequest('LOAN_CONTRACTING')}>Contratação de emprestimo</button>
-                <button onClick={() => createServiceRequest('OTHERS')}>Outros Assuntos</button>
+                <button onClick={() => createServiceRequest(ServiceType.CARD_PROBLEMS)}>Problema de Cartões</button>
+                <button onClick={() => createServiceRequest(ServiceType.LOAN_CONTRACTING)}>Contratação de emprestimo</button>
+                <button onClick={() => createServiceRequest(ServiceType.OTHERS)}>Outros Assuntos</button>
             </div>
             <button onClick={() => setStep('identification')}>Voltar</button>
         </>)}

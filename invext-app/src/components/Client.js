@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import * as Stomp from '@stomp/stompjs';
 import { ServiceRequestService } from '../services/ServiceRequestService';
+import { ServiceType } from '../constants/ServiceType';
 
 const serviceRequestService = new ServiceRequestService();
 
@@ -59,9 +60,9 @@ function Client() {
         <>
           <h2>Que tipo de assunto você deseja falar?</h2>
           <div className="service-types">
-            <button onClick={() => requestService('CARD_PROBLEMS')}>Problema de Cartões</button>
-            <button onClick={() => requestService('LOAN_CONTRACTING')}>Contratação de emprestimo</button>
-            <button onClick={() => requestService('OTHERS')}>Outros Assuntos</button>
+            <button onClick={() => requestService(ServiceType.CARD_PROBLEMS)}>Problema de Cartões</button>
+            <button onClick={() => requestService(ServiceType.LOAN_CONTRACTING)}>Contratação de emprestimo</button>
+            <button onClick={() => requestService(ServiceType.OTHERS)}>Outros Assuntos</button>
           </div>
           <button onClick={() => setStep('identification')}>Voltar</button>
         </>
