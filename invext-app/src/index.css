@@ -15,7 +15,7 @@
 body {
   background-color: rgb(53, 53, 188);
   color: #fff;
-  font-family: 'DM Sans';
+  font-family: 'DM Sans', 'Segoe UI';
  
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
