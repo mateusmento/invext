@@ -8,6 +8,7 @@ import com.invext.domain.entities.Attendant;
 import com.invext.domain.values.ServiceType;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 
 interface AttendantCustomRepository {
     Optional<Attendant> findAvailableAttendant(ServiceType serviceType);
@@ -19,21 +20,25 @@ public class AttendantCustomRepositoryImpl implements AttendantCustomRepository 
     private EntityManager em;
 
     public Optional<Attendant> findAvailableAttendant(ServiceType serviceType) {
-        Attendant result = em.createQuery("""
-            from Attendant att
-            where att.serviceType = :serviceType
-            and not att in (
-                select r.attendant
-                from ServiceRequest r
-                where r.serviceType = :serviceType
-                and r.status = com.invext.domain.values.ServiceRequestStatus.ACCEPTED
-                group by r.attendant
-                having count(r.id) >= 3
-            )
-        """, Attendant.class)
-        .setParameter("serviceType", serviceType)
-        .getSingleResult();
+        try {
+            var result = em.createQuery("""
+                from Attendant att
+                where att.serviceType = :serviceType
+                and not att in (
+                    select r.attendant
+                    from ServiceRequest r
+                    where r.serviceType = :serviceType
+                    and r.status = com.invext.domain.values.ServiceRequestStatus.ACCEPTED
+                    group by r.attendant
+                    having count(r.id) >= 3
+                )
+            """, Attendant.class)
+            .setParameter("serviceType", serviceType)
+            .getSingleResult();
 
-        return Optional.ofNullable(result);
+            return Optional.of(result);
+        } catch (NoResultException ex) {
+            return Optional.empty();
+        }
     }
 }

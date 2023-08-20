@@ -8,6 +8,7 @@ import com.invext.domain.entities.ServiceRequest;
 import com.invext.domain.values.ServiceType;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 
 interface ServiceRequestCustomerRepository {
     Optional<ServiceRequest> findNextPendingServiceRequest(ServiceType serviceType);
@@ -19,15 +20,19 @@ public class ServiceRequestCustomerRepositoryImpl implements ServiceRequestCusto
     private EntityManager em;
 
     public Optional<ServiceRequest> findNextPendingServiceRequest(ServiceType serviceType) {
-        var result = em.createQuery("""
-            from ServiceRequest sr
-            where sr.serviceType = :serviceType
-            and sr.status = com.invext.domain.values.ServiceRequestStatus.PENDING
-            order by sr.createdAt
-        """, ServiceRequest.class)
-        .setParameter("serviceType", serviceType)
-        .getSingleResult();
+        try {
+            var result = em.createQuery("""
+                from ServiceRequest sr
+                where sr.serviceType = :serviceType
+                and sr.status = com.invext.domain.values.ServiceRequestStatus.PENDING
+                order by sr.createdAt
+            """, ServiceRequest.class)
+            .setParameter("serviceType", serviceType)
+            .getSingleResult();
 
-        return Optional.ofNullable(result);
+            return Optional.of(result);
+        } catch (NoResultException ex) {
+            return Optional.empty();
+        }
     }
 }
