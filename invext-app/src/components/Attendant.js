@@ -1,23 +1,16 @@
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import debounce from 'debounce-promise';
 import * as Stomp from "@stomp/stompjs";
+import axios from "../axios";
+import { AttendantService } from "../services/AttendantService";
+import { ServiceRequestService } from "../services/ServiceRequestService";
 
 const findAttendant = debounce((name) => {
-    return axios.get(`http://localhost:8080/attendants`, { params: { name } });
+    return axios.get(`/attendants`, { params: { name } });
 }, 1000);
 
-function findServiceRequest(attendantId) {
-    return axios.get(`http://localhost:8080/attendants/${attendantId}/service-requests`);
-}
-
-function finishServiceRequest(serviceRequestId) {
-    return axios.put(`http://localhost:8080/service-requests/${serviceRequestId}/finished`);
-}
-
-function createAttendant(name, serviceType) {
-    return axios.post('http://localhost:8080/attendants', { name, serviceType });
-}
+const attendantService = new AttendantService();
+const serviceRequestService = new ServiceRequestService();
 
 export function Attendant() {
     const [selectedAttendantId, setSelectedAttendantId] = useState();
@@ -37,8 +30,8 @@ export function Attendant() {
         return () => stomp.current.deactivate();
     }, []);
     
-    async function create(serviceType) {
-        const { data: attendant } = await createAttendant(attendantName, serviceType);
+    async function createServiceRequest(serviceType) {
+        const { data: attendant } = await attendantService.createAttendant(attendantName, serviceType);
         setSelectedAttendantId(attendant.id);
         setStep('identification');
     };
@@ -62,7 +55,7 @@ export function Attendant() {
     }
 
     async function serve() {
-      const { data } = await findServiceRequest(selectedAttendantId);
+      const { data } = await attendantService.findServiceRequest(selectedAttendantId);
       setServiceRequests(data);
       setStep('serve');
       stomp.current.subscribe(`/attendants/${selectedAttendantId}`, (serviceRequest) => {
@@ -70,9 +63,9 @@ export function Attendant() {
       });
     }
 
-    async function finish(serviceRequest) {
-        await finishServiceRequest(serviceRequest.id);
-        const { data } = await findServiceRequest(selectedAttendantId);
+    async function finishServiceRequest(serviceRequest) {
+        await serviceRequestService.finishServiceRequest(serviceRequest.id);
+        const { data } = await attendantService.findServiceRequest(selectedAttendantId);
         setServiceRequests(data);
     }
 
@@ -99,9 +92,9 @@ export function Attendant() {
         { step === 'create-attendant' && (<>
             <b>Criar atendante {attendantName}</b>
             <div className="service-types">
-                <button onClick={() => create('CARD_PROBLEMS')}>Problema de Cartões</button>
-                <button onClick={() => create('LOAN_CONTRACTING')}>Contratação de emprestimo</button>
-                <button onClick={() => create('OTHERS')}>Outros Assuntos</button>
+                <button onClick={() => createServiceRequest('CARD_PROBLEMS')}>Problema de Cartões</button>
+                <button onClick={() => createServiceRequest('LOAN_CONTRACTING')}>Contratação de emprestimo</button>
+                <button onClick={() => createServiceRequest('OTHERS')}>Outros Assuntos</button>
             </div>
             <button onClick={() => setStep('identification')}>Voltar</button>
         </>)}
@@ -111,7 +104,7 @@ export function Attendant() {
                 {serviceRequests.map(serviceRequest => (
                     <li className="service-request" key={serviceRequest.id}>
                         <div>{serviceRequest.clientName}</div>
-                        <button onClick={() => finish(serviceRequest)}>Finalizar</button>
+                        <button onClick={() => finishServiceRequest(serviceRequest)}>Finalizar</button>
                     </li>
                 ))}
             </ul>

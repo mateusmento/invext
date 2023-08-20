@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import './App.css';
-import axios from 'axios';
 import * as Stomp from '@stomp/stompjs';
+import { ServiceRequestService } from '../services/ServiceRequestService';
 
-function createServiceRequest(serviceRequestData) {
-  return axios.post('http://localhost:8080/service-requests', serviceRequestData);
-}
+const serviceRequestService = new ServiceRequestService();
 
 function Client() {
   const [clientName, setClientName] = useState('');
@@ -23,7 +21,7 @@ function Client() {
   }, []);
 
   async function requestService(serviceType) {
-    const { data: serviceRequest } = await createServiceRequest({ serviceType, clientName });
+    const { data: serviceRequest } = await serviceRequestService.createServiceRequest({ serviceType, clientName });
 
     if (serviceRequest.attendant) {
       beServed(serviceRequest);
