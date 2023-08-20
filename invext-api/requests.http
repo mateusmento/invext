@@ -1,0 +1,25 @@
+POST http://localhost:8080/attendants
+Content-Type: application/json
+
+{
+    "name": "Mateus",
+    "serviceType": "LOAN_CONTRACTING"
+}
+
+###
+
+POST http://localhost:8080/service-requests
+Content-Type: application/json
+
+{
+    "clientName": "Renato",
+    "serviceType": "LOAN_CONTRACTING"
+}
+
+###
+
+GET http://localhost:8080/attendants/1/service-requests
+
+###
+
+PUT http://localhost:8080/service-requests/20/finished
