@@ -81,7 +81,7 @@ export function Attendant() {
                 />
                 {showAttendants && (
                     <ul className="attendants">
-                        {attendantName && <li className="attendant" onClick={() => setStep('create-attendant')}>Criar atendante {attendantName}</li>}
+                        <li className="attendant" onClick={() => setStep('create-attendant')}>Criar atendante {attendantName}</li>
                         {attendants.map(att => (
                             <li className="attendant" onClick={() => selectAttendant(att)} key={att.id}>{att.name}</li>
                         ))}
