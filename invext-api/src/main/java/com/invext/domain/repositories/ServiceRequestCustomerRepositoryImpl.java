@@ -28,6 +28,7 @@ public class ServiceRequestCustomerRepositoryImpl implements ServiceRequestCusto
                 order by sr.createdAt
             """, ServiceRequest.class)
             .setParameter("serviceType", serviceType)
+            .setMaxResults(1)
             .getSingleResult();
 
             return Optional.of(result);
