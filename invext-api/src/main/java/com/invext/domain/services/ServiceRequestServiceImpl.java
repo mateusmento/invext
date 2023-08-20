@@ -2,7 +2,6 @@ package com.invext.domain.services;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.invext.domain.dtos.CreateServiceRequestDto;
@@ -39,9 +38,8 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
             throw new InvalidServiceRequestFinishingException("Can not finish a not accepted ServiceRequest");
         serviceRequest.setStatus(ServiceRequestStatus.FINISHED);
         serviceRequestRepository.save(serviceRequest);
-        var pageable = PageRequest.ofSize(1);
-        serviceRequestRepository.findNextPendingServiceRequest(serviceRequest.getServiceType(), pageable)
-            .forEach((pendingServiceRequest) -> {
+        serviceRequestRepository.findNextPendingServiceRequest(serviceRequest.getServiceType())
+            .ifPresent((pendingServiceRequest) -> {
                 pendingServiceRequest.setStatus(ServiceRequestStatus.ACCEPTED);
                 pendingServiceRequest.setAttendant(serviceRequest.getAttendant());
                 serviceRequestRepository.save(pendingServiceRequest);
