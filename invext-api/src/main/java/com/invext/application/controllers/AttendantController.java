@@ -15,6 +15,7 @@ import com.invext.domain.entities.Attendant;
 import com.invext.domain.entities.ServiceRequest;
 import com.invext.domain.services.AttendantService;
 
+
 @RestController
 @RequestMapping("/attendants")
 public class AttendantController {
