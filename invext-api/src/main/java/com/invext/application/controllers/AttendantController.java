@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.invext.application.dtos.FindAttendantsDto;
 import com.invext.domain.dtos.CreateAttendantDto;
 import com.invext.domain.entities.Attendant;
 import com.invext.domain.entities.ServiceRequest;
@@ -22,6 +23,11 @@ public class AttendantController {
 
     @Autowired
     private AttendantService attendantService;
+
+    @GetMapping
+    public List<Attendant> findAttendant(FindAttendantsDto dto) {
+        return attendantService.findAttendants(dto);
+    }
 
     @PostMapping
     public Attendant createAttendant(@RequestBody CreateAttendantDto dto) {
