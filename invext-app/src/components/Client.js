@@ -27,10 +27,7 @@ function Client() {
     if (serviceRequest.attendant) {
       listenAttendant(serviceRequest);
     } else {
-      setStep('await-attendant');
-      stomp.current.subscribe(`/clients/${serviceRequest.clientCode}/accepted`, (serviceRequest) => {
-        listenAttendant(JSON.parse(serviceRequest.body));
-      });
+      awaitAttendant();
     }
   }
 
@@ -40,6 +37,13 @@ function Client() {
     stomp.current.subscribe(`/clients/${serviceRequest.clientCode}/finished`, () => {
       setServiceRequest(null);
       setStep('identification');
+    });
+  }
+
+  function awaitAttendant() {
+    setStep('await-attendant');
+    stomp.current.subscribe(`/clients/${serviceRequest.clientCode}/accepted`, (serviceRequest) => {
+      listenAttendant(JSON.parse(serviceRequest.body));
     });
   }
 
