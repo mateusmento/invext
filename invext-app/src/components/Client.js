@@ -27,7 +27,7 @@ function Client() {
     if (serviceRequest.attendant) {
       listenAttendant(serviceRequest);
     } else {
-      awaitAttendant();
+      awaitAttendant(serviceRequest);
     }
   }
 
@@ -40,7 +40,7 @@ function Client() {
     });
   }
 
-  function awaitAttendant() {
+  function awaitAttendant(serviceRequest) {
     setStep('await-attendant');
     stomp.current.subscribe(`/clients/${serviceRequest.clientCode}/accepted`, (serviceRequest) => {
       listenAttendant(JSON.parse(serviceRequest.body));

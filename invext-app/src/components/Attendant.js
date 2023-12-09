@@ -30,7 +30,7 @@ export function Attendant() {
         stomp.current.activate();
         return () => stomp.current.deactivate();
     }, []);
-    
+
     async function createServiceRequest(serviceType) {
         const { data: attendant } = await attendantService.createAttendant(attendantName, serviceType);
         setSelectedAttendantId(attendant.id);
